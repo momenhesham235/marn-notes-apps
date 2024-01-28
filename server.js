@@ -1,20 +1,27 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import notes from "./routes/notes.js";
+// import path from "path";
+import { dbConnection } from "./config/db.js";
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 dotenv.config({
-  path: "./config/config.env",
-});
+    path: "./config/.env",
+})
 
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use("/api/v1/notes", notes);
 
 app.listen(port, () => {
-  console.log(`notes app listening at http://localhost:${port}`);
+  try {
+    dbConnection();
+    console.log(`Server running on port http://localhost:${port}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
 });
