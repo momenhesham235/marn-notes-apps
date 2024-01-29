@@ -8,8 +8,9 @@ import NotesSchema from "../models/NotesSchema.js";
  * @return {Promise<void>} A promise that resolves with a JSON response
  */
 export const getAllNotes = async (req, res) => {
+  const userId = req.userId;
   try {
-    const notes = await NotesSchema.find();
+    const notes = await NotesSchema.find({ userId });
     res.status(200).json({
       success: true,
       data: notes,
@@ -32,8 +33,9 @@ export const getAllNotes = async (req, res) => {
  * @return {Promise<void>} A Promise that resolves after handling the request
  */
 export const addANewNote = async (req, res) => {
+  const userId = req.userId;
   try {
-    const note = await NotesSchema.create(req.body);
+    const note = await NotesSchema.create({ ...req.body, userId });
     res.status(201).json({
       success: true,
       data: note,
@@ -55,6 +57,13 @@ export const addANewNote = async (req, res) => {
  * @return {Promise<void>} a Promise that resolves to nothing
  */
 export const getNote = async (req, res) => {
+  // check if the valid mongoose id
+  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(404).json({
+      success: false,
+      message: "Invalid note ID",
+    });
+  }
   try {
     const note = await NotesSchema.findById(req.params.id);
     if (!note) {
@@ -90,6 +99,10 @@ export const updateNote = async (req, res) => {
       new: true,
       runValidators: true,
     });
+    res.status(200).json({
+      success: true,
+      data: note,
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -116,7 +129,6 @@ export const deleteNote = async (req, res) => {
     } else {
       res.status(200).json({
         success: true,
-        data: note,
         message: "Note deleted successfully",
       });
     }
