@@ -1,12 +1,13 @@
-import MainRoute from "./Route/Route";
-import { AuthProvider } from "./Store/Context/authContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import MainRoute from "./Route/MainRoute";
 
 const App = () => {
+  // const { user } = useAuth();
   return (
     <>
-      <AuthProvider>
-        <MainRoute />
-      </AuthProvider>
+      <ToastContainer />
+      <MainRoute />
     </>
   );
 };

@@ -102,6 +102,7 @@ export const updateNote = async (req, res) => {
     res.status(200).json({
       success: true,
       data: note,
+      message: "Note updated successfully",
     });
   } catch (error) {
     res.status(400).json({

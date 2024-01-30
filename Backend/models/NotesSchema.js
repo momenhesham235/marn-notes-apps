@@ -21,7 +21,7 @@ const NoteSchema = new mongoose.Schema(
       default: "#ffffff",
     },
   },
-  { timestamps: true }
+  { timestamps: true , versionKey: false }
 );
 
 export default mongoose.model("Note", NoteSchema);
